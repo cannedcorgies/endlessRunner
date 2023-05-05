@@ -16,7 +16,8 @@ class Rocket extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this); 
 
-        this.origin = y;
+        this.originY = game.config.height/2;
+        this.originX = game.config.width/2;
         this.scaleX = 0.1;
         this.scaleY = 0.1;
 
@@ -43,7 +44,6 @@ class Rocket extends Phaser.GameObjects.Sprite {
 
     reset() {
 
-        this.y = this.origin;
         this.scaleX = 0.1;
         this.scaleY = 0.1;
 
@@ -60,7 +60,8 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.sixthGo = false;
         this.sixthThresh = false;
 
-        console.log("from Rocket.js: from reset(): segment.firstThresh after tween: ", this.firstThresh);
+        this.inFront = null;
+
     }
 
 }

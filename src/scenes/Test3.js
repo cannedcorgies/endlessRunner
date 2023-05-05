@@ -18,8 +18,12 @@ class Test3 extends Phaser.Scene {
   
     preload() {
   
-        this.load.image('road', './assets/road.png');
-        this.load.image('button', './assets/button.png');
+        this.load.image('redRoad', './assets/redRoad.png');
+        this.load.image('yellowRoad', './assets/yellowRoad.png');
+        this.load.image('greenRoad', './assets/greenRoad.png');
+        this.load.image('blueRoad', './assets/blueRoad.png');
+        this.load.image('indigoRoad', './assets/indigoRoad.png');
+        this.load.image('magentaRoad', './assets/magentaRoad.png');
 
     }
   
@@ -42,13 +46,17 @@ class Test3 extends Phaser.Scene {
   
         // test buttons
 
-            this.testButton = new Rocket(this, game.config.width/2, game.config.height/2, 'road');
-            this.secondButton = new Rocket(this, game.config.width/2, game.config.height/2, 'road');
+            this.redBlock = new Rocket(this, 1000, 1000, 'redRoad');
+            this.yellowBlock = new Rocket(this, 1000, 1000, 'yellowRoad');
+            this.greenBlock = new Rocket(this, 1000, 1000, 'greenRoad');
+            this.blueBlock = new Rocket(this, 1000, 1000, 'blueRoad');
+            this.indigoBlock = new Rocket(this, 1000, 1000, 'indigoRoad');
+            this.magentaBlock = new Rocket(this, 1000, 1000, 'magentaRoad');
 
         // bank and queue
 
-            this.bank = [];
-            this.queue = [this.testButton, this.secondButton];
+            this.bank = [this.greenBlock, this.blueBlock, this.indigoBlock, this.magentaBlock];
+            this.queue = [this.redBlock, this.yellowBlock];
 
         // is this thing on?
 
@@ -57,7 +65,7 @@ class Test3 extends Phaser.Scene {
         // start system
 
             this.tweenMe(this.queue[0]);
-            this.secondButton.inFront = this.queue[0];
+            this.yellowBlock.inFront = this.queue[0];
 
     }
   
@@ -69,13 +77,16 @@ class Test3 extends Phaser.Scene {
   
     }
 
+    // update to correct tween for each index in queue
     tweensChecks(segment) {
 
         if (!segment.firstThresh && !segment.firstGo && segment.inFront.firstThresh) {
-            console.log("from Test2.js: from update(): should go through firs tween");
+            segment.x = segment.originX;
+            segment.y = segment.originY; // resets at origin for commencement
+            console.log("from Test3.js: from tweensCheck: first Thresh");
             this.tweenMe(segment);
         }
-        if (!segment.secondThresh && !segment.secondGo && segment.firstThresh) {
+        if (!segment.secondThresh && !segment.secondGo && segment.firstThresh) {        // goes to next tween after confirmation that prev is done
             this.tweenCont2(segment);
         }
         if (!segment.thirdThresh && !segment.thirdGo && segment.secondThresh) {
@@ -87,17 +98,14 @@ class Test3 extends Phaser.Scene {
         if (!segment.fifthThresh && !segment.fifthGo && segment.fourthThresh) {
             this.tweenCont5(segment);
         }
-        if (!segment.sixthThresh && !segment.sixthGo && segment.fifthThresh) {
-            this.tweenCont6(segment, this.queue);
+        if (!segment.sixthThresh && !segment.sixthGo && segment.fifthThresh) {          // queue passed for popping and pushing
+            this.tweenCont6(segment, this.queue, this.bank);
         }
 
     }
 
+    // 6 tween functions for simulated 3D
     tweenMe(segment) {
-
-        console.log("from Test2.js: from tweenMe(): segment.y before tween: ", segment.y)
-        console.log("from Test2.js: from tweenMe(): segment.height before tween: ", segment.height);
-        console.log("from Test2.js: from tweenMe(): segment.scale before tween: ", segment.scale);
 
         var tween = this.tweens.add({
 
@@ -109,22 +117,17 @@ class Test3 extends Phaser.Scene {
             duration: 1000,
             onComplete: function(){
                 tween.remove();
-                console.log("from Test2.js: from tweenMe(): segment.y after tween: ", segment.y);
-                console.log("from Test2.js: from tweenMe(): segment.height after tween: ", segment.height);
-                console.log("from Test2.js: from tweenMe(): segment.scale after tween: ", segment.scale);
                 segment.firstThresh = true;
             }
             
 
         })
 
-        segment.firstGo = true;
+        segment.firstGo = true;     // note: happens before tween even ends
 
     }
 
     tweenCont2(segment) {
-
-        console.log("from Test2.js: from tweenCont2(): segment.y before tween: ", segment.y)
 
         var tween = this.tweens.add({
 
@@ -136,21 +139,17 @@ class Test3 extends Phaser.Scene {
             duration: 500,
             onComplete: function(){
                 tween.remove();
-                console.log("from Test2.js: from tweenCont2(): segment.y after tween: ", segment.y);
                 segment.secondThresh = true;
             }
             
 
         })
 
-        console.log("from Test2.js: from tweenCont2(): segment.y OUTSIDE tween: ", segment.y)
         segment.secondGo = true;
 
     }
 
     tweenCont3(segment) {
-
-        console.log("from Test2.js: from tweenCont3(): segment.y before tween: ", segment.y)
 
         var tween = this.tweens.add({
 
@@ -162,21 +161,17 @@ class Test3 extends Phaser.Scene {
             duration: 250,
             onComplete: function(){
                 tween.remove();
-                console.log("from Test2.js: from tweenCont3(): segment.y after tween: ", segment.y);
                 segment.thirdThresh = true;
             }
             
 
         })
 
-        console.log("from Test2.js: from tweenCont3(): segment.y OUTSIDE tween: ", segment.y)
         segment.thirdGo = true;
 
     }
 
     tweenCont4(segment) {
-
-        console.log("from Test2.js: from tweenCont4(): segment.y before tween: ", segment.y)
 
         var tween = this.tweens.add({
 
@@ -188,21 +183,17 @@ class Test3 extends Phaser.Scene {
             duration: 125,
             onComplete: function(){
                 tween.remove();
-                console.log("from Test2.js: from tweenCont4(): segment.y after tween: ", segment.y);
                 segment.fourthThresh = true;
             }
             
 
         })
 
-        console.log("from Test2.js: from tweenCont4(): segment.y OUTSIDE tween: ", segment.y)
         segment.fourthGo = true;
 
     }
 
     tweenCont5(segment) {
-
-        console.log("from Test2.js: from tweenCont5(): segment.y before tween: ", segment.y)
 
         var tween = this.tweens.add({
 
@@ -214,21 +205,17 @@ class Test3 extends Phaser.Scene {
             duration: 63,
             onComplete: function(){
                 tween.remove();
-                console.log("from Test2.js: from tweenCont5(): segment.y after tween: ", segment.y);
                 segment.fifthThresh = true;
             }
             
 
         })
 
-        console.log("from Test2.js: from tweenCont5(): segment.y OUTSIDE tween: ", segment.y)
         segment.fifthGo = true;
 
     }
 
-    tweenCont6(segment, queue) {
-
-        console.log("from Test2.js: from tweenCont6(): segment.y before tween: ", segment.y)
+    tweenCont6(segment, queue, bank) {
 
         var tween = this.tweens.add({
 
@@ -241,18 +228,24 @@ class Test3 extends Phaser.Scene {
             onComplete: function(){
                 tween.remove();
                 segment.sixthThresh = true;
-                segment.reset();
-                queue.shift();
-                queue.push(segment);
-                segment.inFront = queue[0];
-                console.log("from Test2.js: from tweenCont6(): segment.y after tween: ", segment.y);
-                console.log("from Test2.js: from tweenCont6(): segment.firstThresh after tween: ", segment.firstThresh);
+                segment.reset();                // reset state of segment   // maybe reset y when first tween is ACTUALLY about to happen
+
+                //PLACEHOLDER
+                queue.shift();                  // pop from front of queue  // final should push popped back to bank
+                bank.push(segment);            // push to back             // final should push random one from bank
+
+                let roll = Math.floor(Math.random() * 5);
+
+                queue.push(bank[roll]);
+                bank.splice(roll, 1);
+
+                queue[1].inFront = queue[0];     // repeat
+
             }
             
 
         })
 
-        console.log("from Test2.js: from tweenCont6(): segment.y OUTSIDE tween: ", segment.y)
         segment.sixthGo = true;
 
     }
