@@ -60,6 +60,7 @@ class Test2 extends Phaser.Scene {
         this.testButton.update();
 
         if (!this.testButton.firstThresh && !this.testButton.firstGo) {
+            console.log("from Test2.js: from update(): should go through firs tween");
             this.tweenMe(this.testButton);
         }
         if (!this.testButton.secondThresh && !this.testButton.secondGo && this.testButton.firstThresh) {
@@ -73,6 +74,9 @@ class Test2 extends Phaser.Scene {
         }
         if (!this.testButton.fifthThresh && !this.testButton.fifthGo && this.testButton.fourthThresh) {
             this.tweenCont5(this.testButton);
+        }
+        if (!this.testButton.sixthThresh && !this.testButton.sixthGo && this.testButton.fifthThresh) {
+            this.tweenCont6(this.testButton);
         }
         //console.log("from Test2.js: from update(): testButton.y:", this.testButton.y);
         //console.log("from Test2.js: from update(): passed first:", this.testButton.firstThresh);
@@ -98,6 +102,7 @@ class Test2 extends Phaser.Scene {
                 console.log("from Test2.js: from tweenMe(): segment.y after tween: ", segment.y);
                 console.log("from Test2.js: from tweenMe(): segment.height after tween: ", segment.height);
                 console.log("from Test2.js: from tweenMe(): segment.scale after tween: ", segment.scale);
+                segment.firstThresh = true;
             }
             
 
@@ -118,11 +123,11 @@ class Test2 extends Phaser.Scene {
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 1000,
+            duration: 900,
             onComplete: function(){
                 tween.remove();
                 console.log("from Test2.js: from tweenCont2(): segment.y after tween: ", segment.y);
-                segment.firstThresh = true;
+                segment.secondThresh = true;
             }
             
 
@@ -144,10 +149,11 @@ class Test2 extends Phaser.Scene {
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 1000,
+            duration: 800,
             onComplete: function(){
                 tween.remove();
                 console.log("from Test2.js: from tweenCont3(): segment.y after tween: ", segment.y);
+                segment.thirdThresh = true;
             }
             
 
@@ -165,14 +171,15 @@ class Test2 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + segment.runningHeight,
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 1000,
+            duration: 700,
             onComplete: function(){
                 tween.remove();
                 console.log("from Test2.js: from tweenCont4(): segment.y after tween: ", segment.y);
+                segment.fourthThresh = true;
             }
             
 
@@ -190,14 +197,15 @@ class Test2 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + segment.runningHeight,
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 1000,
+            duration: 600,
             onComplete: function(){
                 tween.remove();
                 console.log("from Test2.js: from tweenCont5(): segment.y after tween: ", segment.y);
+                segment.fifthThresh = true;
             }
             
 
@@ -205,6 +213,34 @@ class Test2 extends Phaser.Scene {
 
         console.log("from Test2.js: from tweenCont5(): segment.y OUTSIDE tween: ", segment.y)
         segment.fifthGo = true;
+
+    }
+
+    tweenCont6(segment) {
+
+        console.log("from Test2.js: from tweenCont6(): segment.y before tween: ", segment.y)
+
+        var tween = this.tweens.add({
+
+            targets: segment,
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            scaleX: segment.scaleX * 2.33,
+            scaleY: segment.scaleY * 2.33,
+            ease:"Linear",
+            duration: 500,
+            onComplete: function(){
+                tween.remove();
+                segment.sixthThresh = true;
+                segment.reset();
+                console.log("from Test2.js: from tweenCont6(): segment.y after tween: ", segment.y);
+                console.log("from Test2.js: from tweenCont6(): segment.firstThresh after tween: ", segment.firstThresh);
+            }
+            
+
+        })
+
+        console.log("from Test2.js: from tweenCont6(): segment.y OUTSIDE tween: ", segment.y)
+        segment.sixthGo = true;
 
     }
 
