@@ -17,8 +17,8 @@ class Rocket extends Phaser.GameObjects.Sprite {
         scene.add.existing(this); 
 
         this.origin = y;
-
-        this.runningHeight = this.height;
+        this.scaleX = 0.1;
+        this.scaleY = 0.1;
 
         this.firstGo = false;
         this.firstThresh = false;
@@ -32,6 +32,8 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.fifthThresh = false;
         this.sixthGo = false;
         this.sixthThresh = false;
+
+        this.inFront;
 
     }
 
