@@ -65,6 +65,10 @@ class Test extends Phaser.Scene {
 
         if (this.front.y == game.config.height + 160) {     // will have to be changed - calculate coordinate conditions (start twial and error) or inspecting image sizes
 
+            // to go in reset()
+            this.front.y = game.config.height/2;
+            this.front.scaleX = 0.1,
+            this.front.scaleY = 0.1,
             this.front = this.queue.shift();        // next to be tweened
             this.tweenMe(this.front);               // actually tween
             this.queue.push(this.front);            // return to queue for now
@@ -82,7 +86,7 @@ class Test extends Phaser.Scene {
             scaleX: 10,
             scaleY: 10,
             ease:"Linear",
-            duration:1000,
+            duration: 1000,
             onComplete:function(){
                 tween.remove();
             }
