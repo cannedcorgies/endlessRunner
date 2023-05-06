@@ -18,8 +18,8 @@ class Car extends Phaser.GameObjects.Sprite {
 
         // add object to existing scene
         scene.add.existing(this);       // add to existing
-        this.moveSpeed = 5;             // pixels to move per frame
-        this.airSpeed = 10;
+        this.moveSpeed = 20;             // pixels to move per frame
+        this.airSpeed = 30;
 
         // jump
         this.jumpPower = 25;
@@ -76,7 +76,7 @@ class Car extends Phaser.GameObjects.Sprite {
         if (this.jumping && !game.input.activePointer.isDown) { this.downAvailable = true; }
 
         // left/right movement
-        if ((keyLEFT.isDown || (game.input.mousePointer.x < this.x - 5 && this.mouseActivated)) && this.x >= borderUISize + this.width) {
+        if ((keyLEFT.isDown || (game.input.mousePointer.x < this.x - 5 && this.mouseActivated)) && this.x >= leftRail + this.width) {
 
             if (this.jumping){
                 this.x -= this.airSpeed;    // floaty movement in the air
@@ -84,7 +84,7 @@ class Car extends Phaser.GameObjects.Sprite {
                 this.x -= this.moveSpeed;
             }
 
-        } else if ((keyRIGHT.isDown || (game.input.mousePointer.x > this.x + 5 && this.mouseActivated)) && this.x <= game.config.width - borderUISize - this.width) {
+        } else if ((keyRIGHT.isDown || (game.input.mousePointer.x > this.x + 5 && this.mouseActivated)) && this.x <= rightRail - this.width) {
 
             if (this.jumping){
                 this.x += this.airSpeed;    // floaty movement in the air

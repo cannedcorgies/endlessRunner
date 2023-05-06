@@ -19,6 +19,9 @@ class Test3 extends Phaser.Scene {
     preload() {
   
         this.load.image('car', './assets/car.png');
+        this.load.image('carShadow', './assets/carShadow.png');
+
+        this.load.image('redButton', './assets/redButton.png');
         
         this.load.image('redRoad', './assets/redRoad.png');
         this.load.image('yellowRoad', './assets/yellowRoad.png');
@@ -57,8 +60,12 @@ class Test3 extends Phaser.Scene {
             this.magentaBlock = new Road(this, 1000, 1000, 'magentaRoad');
             this.blackBlock = new Road(this, 1000, 1000, 'blackRoad');
 
+            // this.add.image(leftRail, game.config.height - borderUISize - borderPadding, 'redButton');        // to check bounds
+            // this.add.image(rightRail, game.config.height - borderUISize - borderPadding, 'redButton');       // to check bounds
+
         // player
 
+            this.carShadow = new CarShadow(this, game.config.width/2, game.config.height - borderUISize - borderPadding + 15, 'carShadow');
             this.player = new Car(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'car').setOrigin(0.5, 0);
 
             keyF = 
@@ -96,6 +103,7 @@ class Test3 extends Phaser.Scene {
         this.tweensChecks(this.queue[1]);
 
         this.player.update();
+        this.carShadow.x = this.player.x;
         this.player.collisionWrapper(this.queue[0]);
   
     }

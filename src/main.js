@@ -19,3 +19,6 @@ let keyF, keyR, keyLEFT, keyRIGHT, keyDOWN, clickLeft;
 
 let borderUISize = game.config.height / 15;
 let borderPadding = borderUISize / 3;
+
+let leftRail = game.config.width/2 - borderPadding * 15;
+let rightRail = game.config.width/2 + borderPadding * 15;
