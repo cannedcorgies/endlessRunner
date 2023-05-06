@@ -18,12 +18,15 @@ class Test3 extends Phaser.Scene {
   
     preload() {
   
+        this.load.image('car', './assets/car.png');
+        
         this.load.image('redRoad', './assets/redRoad.png');
         this.load.image('yellowRoad', './assets/yellowRoad.png');
         this.load.image('greenRoad', './assets/greenRoad.png');
         this.load.image('blueRoad', './assets/blueRoad.png');
         this.load.image('indigoRoad', './assets/indigoRoad.png');
         this.load.image('magentaRoad', './assets/magentaRoad.png');
+        this.load.image('blackRoad', './assets/blackRoad.png');
 
     }
   
@@ -46,16 +49,34 @@ class Test3 extends Phaser.Scene {
   
         // test buttons
 
-            this.redBlock = new Rocket(this, 1000, 1000, 'redRoad');
-            this.yellowBlock = new Rocket(this, 1000, 1000, 'yellowRoad');
-            this.greenBlock = new Rocket(this, 1000, 1000, 'greenRoad');
-            this.blueBlock = new Rocket(this, 1000, 1000, 'blueRoad');
-            this.indigoBlock = new Rocket(this, 1000, 1000, 'indigoRoad');
-            this.magentaBlock = new Rocket(this, 1000, 1000, 'magentaRoad');
+            this.redBlock = new Road(this, 1000, 1000, 'redRoad');
+            this.yellowBlock = new Road(this, 1000, 1000, 'yellowRoad');
+            this.greenBlock = new Road(this, 1000, 1000, 'greenRoad');
+            this.blueBlock = new Road(this, 1000, 1000, 'blueRoad');
+            this.indigoBlock = new Road(this, 1000, 1000, 'indigoRoad');
+            this.magentaBlock = new Road(this, 1000, 1000, 'magentaRoad');
+            this.blackBlock = new Road(this, 1000, 1000, 'blackRoad');
+
+        // player
+
+            this.player = new Car(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'car').setOrigin(0.5, 0);
+
+            keyF = 
+                this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+            keyR = 
+                this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+            keyLEFT = 
+                this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+            keyRIGHT = 
+                this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+            keyDOWN = 
+                this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+        this.mouseActive = false;
 
         // bank and queue
 
-            this.bank = [this.greenBlock, this.blueBlock, this.indigoBlock, this.magentaBlock];
+            this.bank = [this.greenBlock, this.blueBlock, this.indigoBlock, this.magentaBlock, this.blackBlock];
             this.queue = [this.redBlock, this.yellowBlock];
 
         // is this thing on?
@@ -74,6 +95,8 @@ class Test3 extends Phaser.Scene {
         this.tweensChecks(this.queue[0]);
         this.tweensChecks(this.queue[1]);
 
+        this.player.update();
+        this.player.collisionWrapper(this.queue[0]);
   
     }
 
@@ -83,7 +106,6 @@ class Test3 extends Phaser.Scene {
         if (!segment.firstThresh && !segment.firstGo && segment.inFront.firstThresh) {
             segment.x = segment.originX;
             segment.y = segment.originY; // resets at origin for commencement
-            console.log("from Test3.js: from tweensCheck: first Thresh");
             this.tweenMe(segment);
         }
         if (!segment.secondThresh && !segment.secondGo && segment.firstThresh) {        // goes to next tween after confirmation that prev is done

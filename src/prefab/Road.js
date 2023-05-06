@@ -6,13 +6,13 @@
 
 //////////////////////
 
-class Rocket extends Phaser.GameObjects.Sprite {
+class Road extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, texture, frame) {
 
         super(scene, x, y, texture, frame);
 
-        console.log("from Rocket.js: from constructor: i'm here!!")
+        console.log("from Road.js: from constructor: i'm here!!")
 
         scene.add.existing(this); 
 
@@ -61,6 +61,12 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.sixthThresh = false;
 
         this.inFront = null;
+
+    }
+
+    collisionBehavior(car) {
+
+        console.log("from Road.js: from collisionBehavior(): a collision happened");
 
     }
 
