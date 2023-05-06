@@ -68,6 +68,8 @@ class Car extends Phaser.GameObjects.Sprite {
         this.spawning = false;
         this.active = true;
 
+        this.gameOver = false;
+
     }
 
     update() {
@@ -254,15 +256,18 @@ class Car extends Phaser.GameObjects.Sprite {
         if (this.active) {
 
           // simple AABB checking
-          if (this.x < collidee.x + collidee.width &&           // check if rocket origin is to left of collidee's RIGHT bound
-              this.x + this.width > collidee.x &&               // check if collidee origin is to left of ROCKET'S RIGHT bound
-              this.y < collidee.y + collidee.height &&          // check if rocket origin is above collidee's LOWER bound
-              this.height + this.y > collidee. y) {             // check if collidee origin is above ROCKET'S LOWER bound
+          if (((this.x < collidee.x + collidee.currWidth &&             // check if rocket origin is to left of collidee's RIGHT bound
+                this.x + this.width > collidee.x) ||                      // check if collidee origin is to left of ROCKET'S RIGHT bound
+                (this.x > collidee.x - collidee.currWidth &&              // check if rocket origin is to right of collidee'S RIGHT bound     // either or it's trapped in box
+                collidee.y > this.x - this.width))                      // check if collidee origin is to right of ROCKET'S RIGHT bound
+                &&
+                (this.y < collidee.y + collidee.currHeight &&             // check if rocket origin is above collidee's LOWER bound
+                this.height + this.y > collidee. y)) {                    // check if collidee origin is above ROCKET'S LOWER bound
               
-              return true && this.grounded;        // returns true both if objects touching and collisions activated
+                return true && this.grounded;        // returns true both if objects touching and collisions activated
   
             } else {
-              return false;
+                return false;
             }
         
         }
@@ -271,8 +276,9 @@ class Car extends Phaser.GameObjects.Sprite {
 
     collisionWrapper(collidee){
 
-        if (this.checkCollision(collidee)) {        // if collision actually happened
+        if (this.grounded && this.checkCollision(collidee)) {        // if collision actually happened
 
+            console.log("from Car.js: from collisionWrapper: should've collided");
             collidee.collisionBehavior(this);
   
         }
