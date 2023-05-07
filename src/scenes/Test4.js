@@ -24,6 +24,8 @@ class Test4 extends Phaser.Scene {
         this.load.image('spikesLeft', './assets/spikesLeft.png');
         this.load.image('spikesRight', './assets/spikesRight.png');
 
+        this.load.image('overheadSign', './assets/watchYourHead.png');
+
         this.load.image('yellowRoad', './assets/yellowRoad.png');
         this.load.image('greenRoad', './assets/greenRoad.png');
         this.load.image('blueRoad', './assets/blueRoad.png');
@@ -65,6 +67,9 @@ class Test4 extends Phaser.Scene {
             this.spikesLeft02 = new SpikesLeft(this, 1000, 1000, 'spikesLeft');
             this.spikesRight02 = new SpikesRight(this, 1000, 1000, 'spikesRight');
 
+            this.overheadSign01 = new OverheadSign(this, 1000, 1000, 'overheadSign');
+            this.overheadSign02 = new OverheadSign(this, 1000, 1000, 'overheadSign');
+
             // this.add.image(leftRail, game.config.height - borderUISize - borderPadding, 'redButton');        // to check bounds
             // this.add.image(rightRail, game.config.height - borderUISize - borderPadding, 'redButton');       // to check bounds
 
@@ -88,7 +93,7 @@ class Test4 extends Phaser.Scene {
 
         // bank and queue
 
-            this.bank = [this.spikesLeft01, this.spikesRight01, this.blackRoad01, this.blackRoad02];
+            this.bank = [this.spikesLeft01, this.spikesRight01, this.blackRoad01, this.blackRoad02, this.overheadSign01, this.overheadSign02];
             this.queue = [this.redBlock01, this.redBlock02];
 
         // scoring
@@ -137,7 +142,7 @@ class Test4 extends Phaser.Scene {
             this.carShadow.x = this.player.x;
             this.player.collisionWrapper(this.queue[0]);
 
-        }
+        } else { this.player.alpha = 0; }
   
     }
 
@@ -149,7 +154,7 @@ class Test4 extends Phaser.Scene {
 
     speedUp() {
 
-        if (this.acceleration > 0.3) {
+        if (this.acceleration > 0.2) {
 
             this.acceleration -= 0.1;
 
