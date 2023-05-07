@@ -36,6 +36,8 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.direction = 1.0;
+
     }
 
     update() {      // update method

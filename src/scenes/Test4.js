@@ -70,6 +70,8 @@ class Test4 extends Phaser.Scene {
             this.overheadSign01 = new OverheadSign(this, 1000, 1000, 'overheadSign');
             this.overheadSign02 = new OverheadSign(this, 1000, 1000, 'overheadSign');
 
+            this.add.image(15, 10, 'blackRoad');
+
             // this.add.image(leftRail, game.config.height - borderUISize - borderPadding, 'redButton');        // to check bounds
             // this.add.image(rightRail, game.config.height - borderUISize - borderPadding, 'redButton');       // to check bounds
 
