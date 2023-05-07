@@ -78,7 +78,7 @@ class Car extends Phaser.GameObjects.Sprite {
         if (this.jumping && !game.input.activePointer.isDown) { this.downAvailable = true; }
 
         // left/right movement
-        if ((keyLEFT.isDown || (game.input.mousePointer.x < this.x - 5 && this.mouseActivated)) && this.x >= leftRail + this.width) {
+        if ((keyLEFT.isDown || (game.input.mousePointer.x < this.x - 15 && this.mouseActivated)) && this.x >= leftRail + this.width) {
 
             if (this.jumping){
                 this.x -= this.airSpeed;    // floaty movement in the air
@@ -86,7 +86,7 @@ class Car extends Phaser.GameObjects.Sprite {
                 this.x -= this.moveSpeed;
             }
 
-        } else if ((keyRIGHT.isDown || (game.input.mousePointer.x > this.x + 5 && this.mouseActivated)) && this.x <= rightRail - this.width) {
+        } else if ((keyRIGHT.isDown || (game.input.mousePointer.x > this.x + 15 && this.mouseActivated)) && this.x <= rightRail - this.width) {
 
             if (this.jumping){
                 this.x += this.airSpeed;    // floaty movement in the air
@@ -278,7 +278,7 @@ class Car extends Phaser.GameObjects.Sprite {
 
         if (this.grounded && this.checkCollision(collidee)) {        // if collision actually happened
 
-            console.log("from Car.js: from collisionWrapper: should've collided");
+            // console.log("from Car.js: from collisionWrapper: should've collided");
             collidee.collisionBehavior(this);
   
         }

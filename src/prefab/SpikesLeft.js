@@ -68,12 +68,14 @@ class SpikesLeft extends Phaser.GameObjects.Sprite {
 
         this.inFront = null;
 
+        this.direction = 1.0;
+
     }
 
     collisionBehavior(car) {
 
-        console.log("from SpikesLeft.js: from collisionBehavior: car.x:", car.x);
-        console.log("from SpikesLeft.js: from collisionBehavior: this.x:", this.x);
+        // console.log("from SpikesLeft.js: from collisionBehavior: car.x:", car.x);
+        // console.log("from SpikesLeft.js: from collisionBehavior: this.x:", this.x);
         if (car.x - car.width/3 <= this.x) {
             car.gameOver = true;
         }

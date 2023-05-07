@@ -2,10 +2,7 @@
 
 //// NOTES ///////////
 
-// bank and queue
-//      - consider making classes and scripts for each
-//      - popping and queueing and properties and randomizer and such
-//      - conditions
+
 
 //////////////////////
 class Test4 extends Phaser.Scene {
@@ -94,11 +91,32 @@ class Test4 extends Phaser.Scene {
             this.bank = [this.spikesLeft01, this.spikesRight01, this.blackRoad01, this.blackRoad02];
             this.queue = [this.redBlock01, this.redBlock02];
 
-        // is this thing on?
+        // scoring
 
-            this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding*15 + 50, 'WE ARE ON (NUMBER 4)', menuConfig).setOrigin(0.5);
+            this.score = 0;
+            this.scoreDisplay = this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding*15 + 50, this.score, menuConfig).setOrigin(0.5);
 
-        // start system
+            var scoreUp = this.time.addEvent({
+                delay: 1000,                // ms
+                callback: this.addScore,
+                //args: [],
+                callbackScope: this,
+                loop: true
+            });
+
+        // faster!
+            
+            this.acceleration = 1.0;    // lower for faster speeds!!
+
+            var speedUp = this.time.addEvent({
+                delay: 15000,                // ms
+                callback: this.speedUp,
+                //args: [],
+                callbackScope: this,
+                loop: true
+            });
+
+        // start tweening queue
 
             this.tweenMe(this.queue[0]);
             this.queue[0].inFront = this.dummyRoad;
@@ -110,6 +128,8 @@ class Test4 extends Phaser.Scene {
 
         if (!this.player.gameOver) {
 
+            this.scoreDisplay.text = this.score;
+
             this.tweensChecks(this.queue[0]);
             this.tweensChecks(this.queue[1]);
 
@@ -119,6 +139,24 @@ class Test4 extends Phaser.Scene {
 
         }
   
+    }
+
+    addScore() {
+
+        this.score += 1;
+
+    }
+
+    speedUp() {
+
+        if (this.acceleration > 0.3) {
+
+            this.acceleration -= 0.1;
+
+        }
+
+        console.log("from Test4.js: from speedUp(): speeding up!", console.log(this.acceleration));
+
     }
 
     // update to correct tween for each index in queue
@@ -153,11 +191,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 1000,
+            duration: 1000 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.firstThresh = true;
@@ -177,11 +215,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 500,
+            duration: 500 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.secondThresh = true;
@@ -201,11 +239,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 250,
+            duration: 250 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.thirdThresh = true;
@@ -223,11 +261,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 125,
+            duration: 125 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.fourthThresh = true;
@@ -247,11 +285,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 63,
+            duration: 63 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.fifthThresh = true;
@@ -271,11 +309,11 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
-            y: segment.y + (segment.height * (segment.scaleX * 2.33)),
+            y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
             ease:"Linear",
-            duration: 31,
+            duration: 31 * this.acceleration,
             onComplete: function(){
                 tween.remove();
                 segment.sixthThresh = true;

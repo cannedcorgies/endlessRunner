@@ -62,11 +62,13 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.inFront = null;
 
+        this.direction = 1.0;
+
     }
 
     collisionBehavior(car) {
 
-        console.log("from Road.js: from collisionBehavior(): a collision happened");
+        // console.log("from Road.js: from collisionBehavior(): a collision happened");
 
     }
 

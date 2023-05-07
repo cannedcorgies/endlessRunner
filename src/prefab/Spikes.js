@@ -38,6 +38,8 @@ class Spikes extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.direction = 1.0;
+
     }
 
     update() {      // update method
@@ -71,7 +73,7 @@ class Spikes extends Phaser.GameObjects.Sprite {
 
     collisionBehavior(car) {
 
-        console.log("from Spikes.js: from collisionBehavior(): collided");
+        // console.log("from Spikes.js: from collisionBehavior(): collided");
         car.gameOver = true;
 
     }
