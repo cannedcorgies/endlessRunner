@@ -74,6 +74,7 @@ class OverheadSign extends Phaser.GameObjects.Sprite {
     collisionBehavior(car) {
 
         console.log("from OverheadSign.js: from collisionBehavior(): collided");
+        car.overheadFail = true;
         car.gameOver = true;
 
     }

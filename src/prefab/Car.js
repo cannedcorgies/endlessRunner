@@ -55,8 +55,6 @@ class Car extends Phaser.GameObjects.Sprite {
         this.bouncing = false;  // is BOUNCING from ship to ship
         this.bonked = false;    // hit underside of ship
         this.dropping = false;  // player executed ground-pound
-        
-        this.score = 0;
 
             // multiplayer
         this.twoPlayersActivated = false
@@ -65,7 +63,14 @@ class Car extends Phaser.GameObjects.Sprite {
         this.spawning = false;
         this.active = true;
 
+            // flags and game
+        this.score = 0;
+        this.pointPlused = false;
         this.gameOver = false;
+        this.gameStart = false;
+        this.overheadFail = false;
+        this.sideFail = false;
+        this.groundFail = false;
 
     }
 
@@ -145,12 +150,7 @@ class Car extends Phaser.GameObjects.Sprite {
         this.yBoost = this.defBoost;
         this.smallJumpPower = this.smallJumpDef;
         this.bonked = false;
-        this.timeMultiplier = this.timeMultiplierDef;
-        this.pointMultiplier = this.pointMultiplierDef;
-        this.downAvailable = false;
-
-        this.spawning = false;
-
+        
     }
 
     bouncingReset() {

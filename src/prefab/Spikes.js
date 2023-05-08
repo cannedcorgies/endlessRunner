@@ -74,6 +74,7 @@ class Spikes extends Phaser.GameObjects.Sprite {
     collisionBehavior(car) {
 
         // console.log("from Spikes.js: from collisionBehavior(): collided");
+        car.groundFail = true;
         car.gameOver = true;
 
     }

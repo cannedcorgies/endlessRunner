@@ -33,6 +33,8 @@ class Test4 extends Phaser.Scene {
         this.load.image('magentaRoad', './assets/magentaRoad.png');
         this.load.image('blackRoad', './assets/blackRoad.png');
 
+        this.load.image('blackScreen', './assets/blackScreen.png');
+
     }
   
     create() {
@@ -133,13 +135,75 @@ class Test4 extends Phaser.Scene {
             this.queue[0].inFront = this.dummyRoad;
             this.queue[1].inFront = this.queue[0];
 
+        // tutorials
+
+            this.jumpText = this.add.text(game.config.width/2, game.config.height/2, 'F');
+
+            this.watchYourHeadText = this.add.text(game.config.width/2, game.config.height/2, 'watch your head');
+            this.watchYourHeadTip = this.add.text(game.config.width/2 + 20, game.config.height/2 + 20, 'press ↓ midair to dash down');
+            this.watchYourHeadText.alpha = 0;
+            this.watchYourHeadTip.alpha = 0;
+
+            this.sideStepText = this.add.text(game.config.width/2, game.config.height/2, 'move over');
+            this.sideStepTip = this.add.text(game.config.width/2 + 20, game.config.height/2 + 20, 'press ← → to move side to side');
+            this.sideStepText.alpha = 0;
+            this.sideStepTip.alpha = 0;
+
+            this.jumpFailText = this.add.text(game.config.width/2, game.config.height/2, 'crash');
+            this.jumpFailTip = this.add.text(game.config.width/2 + 20, game.config.height/2 + 20, 'F is to jump');
+            this.jumpFailText.alpha = 0;
+            this.jumpFailTip.alpha = 0;
+            
+            this.restartText = this.add.text(game.config.width/2 + 45, game.config.height/2 + 45, 'press F to restart');
+            this.restartText.alpha = 0;
+
+            this.pointPlus = this.add.text(this.player.x + 15, this.player.y + 15, "+5");
+            this.pointPlus.alpha = 0;
+
+                // fade in effect
+            this.blackScreen = this.add.sprite(game.config.width/2, game.config.height/2, 'blackScreen');
+
+            var tween = this.tweens.add({
+
+                targets: this.blackScreen,
+                alpha: 0,
+                ease:"Linear",
+                duration: 5000,
+                onComplete: function(){
+                    tween.remove();
+                    }
+                
+    
+            })
+
+            
+
     }
   
     update() {
 
-        if (!this.player.gameOver) {
+        if (!this.player.gameStart) {
+
+            if (Phaser.Input.Keyboard.JustDown(keyF)) {
+                
+                this.player.jumpStart();
+                this.jumpText.alpha = 0;
+                this.player.gameStart = true;
+
+            }
+
+            this.player.update();
+
+        } else if (!this.player.gameOver && this.player.gameStart) {
 
             this.scoreDisplay.text = this.player.score;
+
+            this.pointPlus.x = this.player.x + 45;
+            this.pointPlus.y = this.player.y - 35;
+            if (this.player.pointPlused) {
+                this.pointPlusTween(this.pointPlus);
+                this.player.pointPlused = false;
+            }
 
             this.tweensChecks(this.queue[0]);
             this.tweensChecks(this.queue[1]);
@@ -148,25 +212,74 @@ class Test4 extends Phaser.Scene {
             this.carShadow.x = this.player.x;
             this.player.collisionWrapper(this.queue[0]);
 
-        } else { this.player.alpha = 0; }
+        } else { 
+
+            this.player.alpha = 0; 
+            this.restartText.alpha = 1;
+
+            if (this.player.overheadFail) {
+
+                this.watchYourHeadText.alpha = 1;
+                this.watchYourHeadTip.alpha = 1;
+
+            }
+
+            if (this.player.groundFail) {
+
+                this.jumpFailText.alpha = 1;
+                this.jumpFailTip.alpha = 1;
+                
+            }
+
+            if (this.player.sideFail) {
+
+                this.sideStepText.alpha = 1;
+                this.sideStepTip.alpha = 1;
+                
+            }
+
+            if (Phaser.Input.Keyboard.JustDown(keyF)) {
+                
+                this.scene.restart();
+
+            }
+        }
   
     }
 
     addScore() {
 
-        this.player.score += 1;
+        if (this.player.gameStart) {
+            this.player.score += 1;
+        }
 
     }
 
     speedUp() {
 
-        if (this.acceleration > 0.2) {
-
+        if (this.acceleration > 0.2 && this.player.gameStart) {
             this.acceleration -= 0.1;
-
         }
 
         console.log("from Test4.js: from speedUp(): speeding up!", console.log(this.acceleration));
+
+    }
+
+    pointPlusTween(pointPlus) {
+
+        pointPlus.alpha = 1;
+        var tween = this.tweens.add({
+
+            targets: pointPlus,
+            alpha: 0,
+            ease:"Linear",
+            duration: 2000,
+            onComplete: function(){
+                tween.remove();
+                }
+            
+
+        })
 
     }
 

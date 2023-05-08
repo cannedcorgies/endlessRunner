@@ -83,6 +83,7 @@ class Bonus extends Phaser.GameObjects.Sprite {
             
             this.collided = true;
             this.alpha = 0;
+            car.pointPlused = true;
             car.score += this.bonus;
 
         }
