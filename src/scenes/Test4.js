@@ -35,6 +35,13 @@ class Test4 extends Phaser.Scene {
 
         this.load.image('blackScreen', './assets/blackScreen.png');
 
+        ////////// Jared - spritesheet load in for blinking
+        this.load.spritesheet('blinkingRoad', './assets/spriteSheet_blinkingRoad.png', {
+            frameWidth: 63,
+            frameHeight: 19
+        });
+        /////////
+
     }
   
     create() {
@@ -75,6 +82,24 @@ class Test4 extends Phaser.Scene {
             this.bonus01 = new Bonus(this, 1000, 1000, 'blueRoad');
 
             this.bouncePad01 = new BouncePad(this, 1000, 1000, 'magentaRoad');
+
+////////////////////////// here, jared!
+
+            this.anims.create({         // simple animation that oscillates between frames 0 and 1, repeating
+                key: "blinking",
+                frameRate: 12,
+                frames: this.anims.generateFrameNumbers("blinkingRoad", {start: 0, end:1}),
+                repeat: -1
+            });
+
+            this.bouncePad02 = new BouncePad(this,              // test sprite - class contained in BouncePad.js
+                game.config.width/2, game.config.height/2,      
+                'blinkingRoad', 0);                             // textured with sprite sheet
+            this.bouncePad02.scaleX = 1.0;                      // resets scale - class's constructor naturally sets to 0.1
+            this.bouncePad02.scaleY = 1.0;                          // just for the test
+            // this.bouncePad02.anims.play('blinking');         // to play
+    
+//////////////////////////
 
             this.add.image(15, 10, 'blackRoad');
 
@@ -195,6 +220,8 @@ class Test4 extends Phaser.Scene {
             this.player.update();
 
         } else if (!this.player.gameOver && this.player.gameStart) {
+
+            this.blackScreen.alpha = 0;
 
             this.scoreDisplay.text = this.player.score;
 

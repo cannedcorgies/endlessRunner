@@ -40,8 +40,6 @@ class BouncePad extends Phaser.GameObjects.Sprite {
 
         this.direction = 1.0;
 
-        this.bonus = 5;
-
     }
 
     update() {      // update method
