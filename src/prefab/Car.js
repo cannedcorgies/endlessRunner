@@ -18,8 +18,8 @@ class Car extends Phaser.GameObjects.Sprite {
 
         // add object to existing scene
         scene.add.existing(this);       // add to existing
-        this.moveSpeed = 20;             // pixels to move per frame
-        this.airSpeed = 30;
+        this.moveSpeed = 30;             // pixels to move per frame
+        this.airSpeed = 45;
 
         // jump
         this.jumpPower = 25;
@@ -56,9 +56,6 @@ class Car extends Phaser.GameObjects.Sprite {
         this.bonked = false;    // hit underside of ship
         this.dropping = false;  // player executed ground-pound
         
-        this.mouseActivated = false;
-        this.downAvailable = false;
-
         this.score = 0;
 
             // multiplayer
@@ -78,7 +75,7 @@ class Car extends Phaser.GameObjects.Sprite {
         if (this.jumping && !game.input.activePointer.isDown) { this.downAvailable = true; }
 
         // left/right movement
-        if ((keyLEFT.isDown || (game.input.mousePointer.x < this.x - 15 && this.mouseActivated)) && this.x >= leftRail + this.width) {
+        if (keyLEFT.isDown&& this.x >= leftRail + this.width) {
 
             if (this.jumping){
                 this.x -= this.airSpeed;    // floaty movement in the air
@@ -86,7 +83,7 @@ class Car extends Phaser.GameObjects.Sprite {
                 this.x -= this.moveSpeed;
             }
 
-        } else if ((keyRIGHT.isDown || (game.input.mousePointer.x > this.x + 15 && this.mouseActivated)) && this.x <= rightRail - this.width) {
+        } else if (keyRIGHT.isDown && this.x <= rightRail - this.width) {
 
             if (this.jumping){
                 this.x += this.airSpeed;    // floaty movement in the air
@@ -98,15 +95,14 @@ class Car extends Phaser.GameObjects.Sprite {
 
 
         // jump button
-        if ((Phaser.Input.Keyboard.JustDown(keyF) || game.input.activePointer.isDown) && this.grounded) { // keyF.isDown for constant, Phaser.Input.Keyboard.JustDown(keyF) for once
+        if (Phaser.Input.Keyboard.JustDown(keyF) && this.grounded) { // keyF.isDown for constant, Phaser.Input.Keyboard.JustDown(keyF) for once
             
-            this.grounded = false;
-            this.jumping = true;
+            this.jumpStart();
             //this.sfxRocket.play();
             
         }
 
-        if ((Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.grounded) || (game.input.activePointer.isDown && this.downAvailable)) { // keyDOWN.isDown for constant, Phaser.Input.Keyboard.JustDown(keyDOWN) for once
+        if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.grounded) { // keyDOWN.isDown for constant, Phaser.Input.Keyboard.JustDown(keyDOWN) for once
             
             this.dropping = true;
             this.jumping = false;
@@ -123,6 +119,13 @@ class Car extends Phaser.GameObjects.Sprite {
             this.drop();
         }
 
+    }
+
+    jumpStart() {
+
+        this.grounded = false;
+        this.jumping = true;
+            
     }
 
     // reset rocket to "ground"
@@ -228,29 +231,6 @@ class Car extends Phaser.GameObjects.Sprite {
 
     }
 
-    spawn(up = true){
-
-        this.grounded = false;
-
-        if (up) {
-
-            this.grounded = false;
-            this.jumping = true;
-            this.sfxRocket.play();
-
-            this.jump();
-
-        this.spawning = true;
-
-        } else {
-            this.grounded = false;
-            this.jumping = true;
-            this.bonk();
-        }
-
-    }
-
-
     checkCollision(collidee) {
 
         if (this.active) {
@@ -278,7 +258,7 @@ class Car extends Phaser.GameObjects.Sprite {
             (this.y < collidee.y + collidee.currHeight &&             // check if rocket origin is above collidee's LOWER bound
             this.height + this.y > collidee. y)) {                    // check if collidee origin is above ROCKET'S LOWER bound
         
-            return true && (this.y < game.config.height/4) && collidee.fifthThresh;        // returns true both if objects touching and collisions activated{
+            return true && (this.y < game.config.height/3.5) && collidee.fifthThresh;        // returns true both if objects touching and collisions activated{
             } else { return false; }
         }
     
@@ -288,7 +268,7 @@ class Car extends Phaser.GameObjects.Sprite {
 
         if (this.checkCollision(collidee)) {        // if collision actually happened
 
-            // console.log("from Car.js: from collisionWrapper: should've collided");
+            console.log("from Car.js: from collisionWrapper: should've collided");
             collidee.collisionBehavior(this);
   
         }

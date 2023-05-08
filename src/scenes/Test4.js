@@ -70,10 +70,21 @@ class Test4 extends Phaser.Scene {
             this.overheadSign01 = new OverheadSign(this, 1000, 1000, 'overheadSign');
             this.overheadSign02 = new OverheadSign(this, 1000, 1000, 'overheadSign');
 
+            this.bonus01 = new Bonus(this, 1000, 1000, 'blueRoad');
+
+            this.bouncePad01 = new BouncePad(this, 1000, 1000, 'magentaRoad');
+
             this.add.image(15, 10, 'blackRoad');
 
-            // this.add.image(leftRail, game.config.height - borderUISize - borderPadding, 'redButton');        // to check bounds
-            // this.add.image(rightRail, game.config.height - borderUISize - borderPadding, 'redButton');       // to check bounds
+            // bank and queue
+
+            this.bank = [ this.blackRoad01, this.blackRoad02,
+                this.spikesLeft01, this.spikesRight01, 
+                this.overheadSign01, this.overheadSign02,
+                this.bouncePad01, 
+                this.bonus01];
+                
+            this.queue = [this.redBlock01, this.redBlock02];
 
         // player
 
@@ -90,14 +101,7 @@ class Test4 extends Phaser.Scene {
                 this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
             keyDOWN = 
                 this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-
-        this.mouseActive = false;
-
-        // bank and queue
-
-            this.bank = [this.spikesLeft01, this.spikesRight01, this.blackRoad01, this.blackRoad02, this.overheadSign01, this.overheadSign02];
-            this.queue = [this.redBlock01, this.redBlock02];
-
+        
         // scoring
 
             this.score = 0;
@@ -135,7 +139,7 @@ class Test4 extends Phaser.Scene {
 
         if (!this.player.gameOver) {
 
-            this.scoreDisplay.text = this.score;
+            this.scoreDisplay.text = this.player.score;
 
             this.tweensChecks(this.queue[0]);
             this.tweensChecks(this.queue[1]);
@@ -150,7 +154,7 @@ class Test4 extends Phaser.Scene {
 
     addScore() {
 
-        this.score += 1;
+        this.player.score += 1;
 
     }
 

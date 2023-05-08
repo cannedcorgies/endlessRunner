@@ -1,4 +1,4 @@
-// Road prefab
+// Bonus prefab
 
 //// NOTES ///////////
 
@@ -6,7 +6,7 @@
 
 //////////////////////
 
-class Road extends Phaser.GameObjects.Sprite {
+class Bonus extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, texture, frame) {
 
@@ -18,6 +18,8 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.originY = game.config.height/2;
         this.originX = game.config.width/2;
+        this.currWidth = this.width;
+        this.currHeight = this.height;
         this.scaleX = 0.1;
         this.scaleY = 0.1;
 
@@ -38,6 +40,9 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.direction = 1.0;
 
+        this.bonus = 5;
+        this.collided = false;
+
     }
 
     update() {      // update method
@@ -48,6 +53,9 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.scaleX = 0.1;
         this.scaleY = 0.1;
+
+        this.currWidth = this.width;
+        this.currHeight = this.height;
 
         this.firstGo = false;
         this.firstThresh = false;
@@ -64,13 +72,20 @@ class Road extends Phaser.GameObjects.Sprite {
 
         this.inFront = null;
 
-        this.direction = 1.0;
+        this.collided = false;
+        this.alpha = 1;
 
     }
 
     collisionBehavior(car) {
 
-        // console.log("from Road.js: from collisionBehavior(): a collision happened");
+        if (!this.collided) {
+            
+            this.collided = true;
+            this.alpha = 0;
+            car.score += this.bonus;
+
+        }
 
     }
 
