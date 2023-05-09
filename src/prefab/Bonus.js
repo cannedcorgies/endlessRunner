@@ -16,8 +16,8 @@ class Bonus extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this); 
 
-        this.originY = game.config.height/2;
-        this.originX = game.config.width/2;
+        this.originPointY = game.config.height/2;
+        this.originPointX = game.config.width/2;
         this.currWidth = this.width;
         this.currHeight = this.height;
         this.scaleX = 0.1;
@@ -42,6 +42,15 @@ class Bonus extends Phaser.GameObjects.Sprite {
 
         this.bonus = 5;
         this.collided = false;
+
+        this.anims.create({         // simple animation that oscillates between frames 0 and 1, repeating
+            key: "blinking",
+            frameRate: 12,
+            frames: this.anims.generateFrameNumbers("blinkingBlueRoad", {start: 0, end:1}),
+            repeat: -1
+        });
+
+        this.anims.play("blinking");
 
     }
 

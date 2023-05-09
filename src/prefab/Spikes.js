@@ -16,8 +16,8 @@ class Spikes extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this); 
 
-        this.originY = game.config.height/2;
-        this.originX = game.config.width/2;
+        this.originPointY = game.config.height/2;
+        this.originPointX = game.config.width/2;
         this.currWidth = this.width;
         this.currHeight = this.height;
         this.scaleX = 0.1;

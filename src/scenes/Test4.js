@@ -35,12 +35,14 @@ class Test4 extends Phaser.Scene {
 
         this.load.image('blackScreen', './assets/blackScreen.png');
 
-        ////////// Jared - spritesheet load in for blinking
-        this.load.spritesheet('blinkingRoad', './assets/spriteSheet_blinkingRoad.png', {
+        this.load.spritesheet('blinkingRedRoad', './assets/blinkingRedRoad.png', {
             frameWidth: 63,
             frameHeight: 19
         });
-        /////////
+        this.load.spritesheet('blinkingBlueRoad', './assets/blinkingBlueRoad.png', {
+            frameWidth: 63,
+            frameHeight: 19
+        });
 
     }
   
@@ -79,39 +81,27 @@ class Test4 extends Phaser.Scene {
             this.overheadSign01 = new OverheadSign(this, 1000, 1000, 'overheadSign');
             this.overheadSign02 = new OverheadSign(this, 1000, 1000, 'overheadSign');
 
-            this.bonus01 = new Bonus(this, 1000, 1000, 'blueRoad');
+            this.bonus01 = new Bonus(this, 1000, 1000, 'blinkingBlueRoad');
 
-            this.bouncePad01 = new BouncePad(this, 1000, 1000, 'magentaRoad');
+            this.bouncePad01 = new BouncePad(this, 1000, 1000, 'blinkingRedRoad', 0);
 
-////////////////////////// here, jared!
-
-            this.anims.create({         // simple animation that oscillates between frames 0 and 1, repeating
-                key: "blinking",
-                frameRate: 12,
-                frames: this.anims.generateFrameNumbers("blinkingRoad", {start: 0, end:1}),
-                repeat: -1
-            });
-
-            this.bouncePad02 = new BouncePad(this,              // test sprite - class contained in BouncePad.js
-                game.config.width/2, game.config.height/2,      
-                'blinkingRoad', 0);                             // textured with sprite sheet
-            this.bouncePad02.scaleX = 1.0;                      // resets scale - class's constructor naturally sets to 0.1
-            this.bouncePad02.scaleY = 1.0;                          // just for the test
-            // this.bouncePad02.anims.play('blinking');         // to play
-    
-//////////////////////////
-
-            this.add.image(15, 10, 'blackRoad');
+            this.add.image(15, 10, 'blackRoad');    // to cover up bug lolol
 
             // bank and queue
 
-            this.bank = [ this.blackRoad01, this.blackRoad02,
+            this.bank = [ 
+                this.redBlock02,
                 this.spikesLeft01, this.spikesRight01, 
-                this.overheadSign01, this.overheadSign02,
-                this.bouncePad01, 
-                this.bonus01];
+                this.overheadSign01
+                ];
                 
-            this.queue = [this.redBlock01, this.redBlock02];
+            this.queue = [
+                this.overheadSign02,
+                this.blackRoad01,
+                this.bonus01,
+                this.bouncePad01,
+                this.blackRoad02,
+                this.redBlock01];
 
         // player
 
@@ -179,7 +169,7 @@ class Test4 extends Phaser.Scene {
             this.jumpFailText.alpha = 0;
             this.jumpFailTip.alpha = 0;
             
-            this.restartText = this.add.text(game.config.width/2 + 45, game.config.height/2 + 45, 'press F to restart');
+            this.restartText = this.add.text(game.config.width/2 + 45, game.config.height/2 + 45, 'press R to restart');
             this.restartText.alpha = 0;
 
             this.pointPlus = this.add.text(this.player.x + 15, this.player.y + 15, "+5");
@@ -265,7 +255,7 @@ class Test4 extends Phaser.Scene {
                 
             }
 
-            if (Phaser.Input.Keyboard.JustDown(keyF)) {
+            if (Phaser.Input.Keyboard.JustDown(keyR)) {
                 
                 this.scene.restart();
 
@@ -314,8 +304,8 @@ class Test4 extends Phaser.Scene {
     tweensChecks(segment) {
 
         if (!segment.firstThresh && !segment.firstGo && segment.inFront.firstThresh) {
-            segment.x = segment.originX;
-            segment.y = segment.originY; // resets at origin for commencement
+            segment.x = segment.originPointX;
+            segment.y = segment.originPointY; // resets at origin for commencement
             this.tweenMe(segment);
         }
         if (!segment.secondThresh && !segment.secondGo && segment.firstThresh) {        // goes to next tween after confirmation that prev is done
@@ -477,11 +467,15 @@ class Test4 extends Phaser.Scene {
                 bank.push(segment);            // push to back             // final should push random one from bank
 
                 let roll = Math.floor(Math.random() * bank.length);
-
-                queue.push(bank[roll]);
+                
+                if (queue.length <= 1) {
+                    queue.push(bank[roll]);
+                }
                 bank.splice(roll, 1);
 
                 queue[1].inFront = queue[0];     // repeat
+
+                console.log("from Test4.js: from tweenCont6(): running queue:", queue);
 
             }
             
