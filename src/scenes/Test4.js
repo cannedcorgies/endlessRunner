@@ -103,6 +103,7 @@ class Test4 extends Phaser.Scene {
                 this.blackRoad02,
                 this.redBlock01];
 
+
         // player
 
             this.carShadow = new CarShadow(this, game.config.width/2, game.config.height - borderUISize - borderPadding + 15, 'carShadow');
@@ -118,6 +119,10 @@ class Test4 extends Phaser.Scene {
                 this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
             keyDOWN = 
                 this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+        // my camera
+
+            this.camera = this.cameras.main;
         
         // scoring
 
@@ -196,6 +201,11 @@ class Test4 extends Phaser.Scene {
     }
   
     update() {
+
+        if (this.player.grounded) {
+
+            this.camera.shake(100, 0.0015);
+        }
 
         if (!this.player.gameStart) {
 
@@ -476,6 +486,7 @@ class Test4 extends Phaser.Scene {
                 queue[1].inFront = queue[0];     // repeat
 
                 console.log("from Test4.js: from tweenCont6(): running queue:", queue);
+                console.log("from Test4.js: from tweenCont6(): running bank:", bank);
 
             }
             
