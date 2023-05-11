@@ -58,9 +58,12 @@ class Test4 extends Phaser.Scene {
         this.load.audio('sfx_openTriangle', './sounds/openTriangle.wav');
         this.load.audio('sfx_rideBell', './sounds/rideBell.wav');
         this.load.audio('sfx_rideCymbal', './sounds/rideCymbal.wav');
-        this.load.audio('sfx_sticks', './sounds/sticks.wav');
+        this.load.audio('sfx_sticks', './sounds/sticks.wav')
+        this.load.audio('sfx_whaleSinging', './sounds/whaleSinging.mp3');
         
-        this.gameOverSoundPlayed = false;
+        // background music
+        this.load.audio('backgroundMusic', './sounds/darkAmbientMusic.mp3');
+
     }
   
     create() {
@@ -184,6 +187,8 @@ class Test4 extends Phaser.Scene {
             this.queue[1].inFront = this.queue[0];
 
         // tutorials
+        
+            this.gameOverSoundPlayed = false;
 
             this.jumpText = this.add.text(game.config.width/2, game.config.height/2, 'F');
 
@@ -208,7 +213,8 @@ class Test4 extends Phaser.Scene {
             this.pointPlus = this.add.text(this.player.x + 15, this.player.y + 15, "+5");
             this.pointPlus.alpha = 0;
 
-        // fade in effect
+        // final set up
+                // fade in effect
             this.blackScreen = this.add.sprite(game.config.width/2, game.config.height/2, 'blackScreen');
 
             var tween = this.tweens.add({
@@ -224,7 +230,12 @@ class Test4 extends Phaser.Scene {
     
             })
 
-            
+                // background music
+            this.backgroundMusic = this.sound.add('backgroundMusic', {volume: 0.2});
+            this.backgroundMusic.loop = true;
+            this.backgroundMusic.play();
+
+            this.sfx_whaleSinging = this.sound.add('sfx_whaleSinging');
 
     }
   
@@ -284,7 +295,8 @@ class Test4 extends Phaser.Scene {
             // play crash cymbal sfx once
             if (!this.gameOverSoundPlayed) {
 
-                this.sound.play('sfx_crashCymbal');
+                this.sound.play('sfx_crashCymbal');     // play crash once
+                this.backgroundMusic.stop();            // turn off background music
                 this.gameOverSoundPlayed = true;
 
             }
@@ -334,6 +346,13 @@ class Test4 extends Phaser.Scene {
 
     speedUp() {
 
+        if (this.player.gameStart){
+
+            this.sfx_whaleSinging.setSeek(1);
+            this.sfx_whaleSinging.play();
+
+        }
+        
         if (this.acceleration > 0.2 && this.player.gameStart) {
             this.acceleration -= 0.1;
         }
