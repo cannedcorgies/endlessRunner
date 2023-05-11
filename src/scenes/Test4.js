@@ -154,6 +154,17 @@ class Test4 extends Phaser.Scene {
                 loop: true
             });
 
+            if (localStorage.getItem("localHigh") == 'undefined') { 
+                localStorage.setItem("localHigh", 0); 
+                console.log("from Test4.js: from create(): local high not found");
+            }
+
+            this.highScoreIndicator = this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding*15 + 80, "new best").setOrigin(0.5);
+            this.highScoreIndicator.alpha = 0;
+
+            this.localHigh = localStorage.highScore;
+            this.highScore = this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding*15 + 50, localStorage.getItem("localHigh"), menuConfig).setOrigin(0.5);
+
         // faster!
             
             this.acceleration = 1.0;    // lower for faster speeds!!
@@ -197,7 +208,7 @@ class Test4 extends Phaser.Scene {
             this.pointPlus = this.add.text(this.player.x + 15, this.player.y + 15, "+5");
             this.pointPlus.alpha = 0;
 
-                // fade in effect
+        // fade in effect
             this.blackScreen = this.add.sprite(game.config.width/2, game.config.height/2, 'blackScreen');
 
             var tween = this.tweens.add({
@@ -219,54 +230,69 @@ class Test4 extends Phaser.Scene {
   
     update() {
 
-        if (this.player.grounded) {
+        if (this.player.grounded) {     // shake camera when player on ground
 
             this.camera.shake(100, 0.0015);
         }
 
-        if (!this.player.gameStart) {
+        if (!this.player.gameStart) {   // if game hasn't started
 
-            if (Phaser.Input.Keyboard.JustDown(keyF)) {
+            if (Phaser.Input.Keyboard.JustDown(keyF)) {     // start when f pressed (on first jump)
                 
                 this.player.jumpStart();
                 this.jumpText.alpha = 0;
+                this.highScore.alpha = 0;
                 this.player.gameStart = true;
 
             }
 
-            this.player.update();
+            this.player.update();       // move left and right
 
-        } else if (!this.player.gameOver && this.player.gameStart) {
+        } else if (!this.player.gameOver && this.player.gameStart) {    // run regular game
 
-            this.blackScreen.alpha = 0;
+            this.blackScreen.alpha = 0;     // make sure fade in is off
 
-            this.scoreDisplay.text = this.player.score;
+            this.scoreDisplay.text = this.player.score;     // update score
 
-            this.pointPlus.x = this.player.x + 45;
-            this.pointPlus.y = this.player.y - 35;
-            if (this.player.pointPlused) {
-                this.pointPlusTween(this.pointPlus);
+            // bonus point indicator update
+            this.pointPlus.x = this.player.x + 45;      // point indicator follows
+            this.pointPlus.y = this.player.y - 35;      //
+            if (this.player.pointPlused) {              // if bonus points gained...
+                this.pointPlusTween(this.pointPlus);        // fade out point indicator
                 this.player.pointPlused = false;
             }
 
+            // tween two objects at any given time
             this.tweensChecks(this.queue[0]);
             this.tweensChecks(this.queue[1]);
 
+            // player, shadow, and collision update
             this.player.update();
             this.carShadow.x = this.player.x;
             this.player.collisionWrapper(this.queue[0]);
 
-        } else { 
+        } else {        // if game over
 
+            // high score save
+            if (localStorage.getItem("localHigh") < this.player.score) {
+
+                localStorage.setItem("localHigh", this.player.score + 1);
+                this.highScoreIndicator.alpha = 1;
+
+            }
+
+            // play crash cymbal sfx once
             if (!this.gameOverSoundPlayed) {
 
                 this.sound.play('sfx_crashCymbal');
                 this.gameOverSoundPlayed = true;
 
             }
-            this.player.alpha = 0; 
-            this.restartText.alpha = 1;
 
+            this.player.alpha = 0;          // player is removed from screen
+            this.restartText.alpha = 1;     // plus restart prompt
+
+            // conditional tutorial
             if (this.player.overheadFail) {
 
                 this.watchYourHeadText.alpha = 1;
@@ -288,6 +314,7 @@ class Test4 extends Phaser.Scene {
                 
             }
 
+            // restart
             if (Phaser.Input.Keyboard.JustDown(keyR)) {
                 
                 this.scene.restart();
