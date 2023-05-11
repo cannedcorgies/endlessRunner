@@ -14,27 +14,34 @@ class Test4 extends Phaser.Scene {
     }
   
     preload() {
-  
+        
+        // player
         this.load.image('car', './assets/car.png');
         this.load.image('carShadow', './assets/carShadow.png');
 
+        // test
         this.load.image('redButton', './assets/redButton.png');
         
+        // obstacles
         this.load.image('redRoad', './assets/redRoad.png');
+        this.load.image('blueRoad', './assets/blueRoad.png');
+
         this.load.image('spikesLeft', './assets/spikesLeft.png');
         this.load.image('spikesRight', './assets/spikesRight.png');
 
         this.load.image('overheadSign', './assets/watchYourHead.png');
 
+        // extra
         this.load.image('yellowRoad', './assets/yellowRoad.png');
         this.load.image('greenRoad', './assets/greenRoad.png');
-        this.load.image('blueRoad', './assets/blueRoad.png');
         this.load.image('indigoRoad', './assets/indigoRoad.png');
         this.load.image('magentaRoad', './assets/magentaRoad.png');
         this.load.image('blackRoad', './assets/blackRoad.png');
 
+        // fade in effect
         this.load.image('blackScreen', './assets/blackScreen.png');
 
+        // animations
         this.load.spritesheet('blinkingRedRoad', './assets/blinkingRedRoad.png', {
             frameWidth: 63,
             frameHeight: 19
@@ -44,6 +51,16 @@ class Test4 extends Phaser.Scene {
             frameHeight: 19
         });
 
+        // sound effects
+        this.load.audio('sfx_closedSurdo', './sounds/closedSurdo.wav');
+        this.load.audio('sfx_crashCymbal', './sounds/crashCymbal.wav');
+        this.load.audio('sfx_midTom1', './sounds/midTom1.wav');
+        this.load.audio('sfx_openTriangle', './sounds/openTriangle.wav');
+        this.load.audio('sfx_rideBell', './sounds/rideBell.wav');
+        this.load.audio('sfx_rideCymbal', './sounds/rideCymbal.wav');
+        this.load.audio('sfx_sticks', './sounds/sticks.wav');
+        
+        this.gameOverSoundPlayed = false;
     }
   
     create() {
@@ -241,6 +258,12 @@ class Test4 extends Phaser.Scene {
 
         } else { 
 
+            if (!this.gameOverSoundPlayed) {
+
+                this.sound.play('sfx_crashCymbal');
+                this.gameOverSoundPlayed = true;
+
+            }
             this.player.alpha = 0; 
             this.restartText.alpha = 1;
 
@@ -338,6 +361,8 @@ class Test4 extends Phaser.Scene {
 
     // 6 tween functions for simulated 3D
     tweenMe(segment) {
+
+        segment.playSound();
 
         var tween = this.tweens.add({
 
@@ -480,8 +505,8 @@ class Test4 extends Phaser.Scene {
                 
                 if (queue.length <= 1) {
                     queue.push(bank[roll]);
+                    bank.splice(roll, 1);
                 }
-                bank.splice(roll, 1);
 
                 queue[1].inFront = queue[0];     // repeat
 

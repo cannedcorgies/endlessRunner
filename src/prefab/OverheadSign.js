@@ -38,12 +38,25 @@ class OverheadSign extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.soundPlayed = false;
+        this.sfx = scene.sound.add('sfx_rideBell');
+
         this.direction = -.6;
 
     }
 
     update() {      // update method
 
+    }
+
+    playSound() {
+
+        if (!this.soundPlayed) {
+
+            this.sfx.play();
+            this.soundPlayed = true;
+        
+        }
     }
 
     reset() {
@@ -68,6 +81,8 @@ class OverheadSign extends Phaser.GameObjects.Sprite {
         this.sixthThresh = false;
 
         this.inFront = null;
+
+        this.soundPlayed = false;
 
     }
 

@@ -38,6 +38,9 @@ class Bonus extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.soundPlayed = false;
+        this.sfx = scene.sound.add('sfx_openTriangle');
+
         this.direction = 1.0;
 
         this.bonus = 5;
@@ -52,6 +55,16 @@ class Bonus extends Phaser.GameObjects.Sprite {
 
         this.anims.play("blinking");
 
+    }
+
+    playSound() {
+
+        if (!this.soundPlayed) {
+
+            this.sfx.play();
+            this.soundPlayed = true;
+        
+        }
     }
 
     update() {      // update method
@@ -83,6 +96,8 @@ class Bonus extends Phaser.GameObjects.Sprite {
 
         this.collided = false;
         this.alpha = 1;
+
+        this.soundPlayed = false;
 
     }
 

@@ -44,6 +44,8 @@ class Road extends Phaser.GameObjects.Sprite {
 
     }
 
+    playSound() {}
+
     reset() {
 
         this.scaleX = 0.1;
@@ -63,8 +65,6 @@ class Road extends Phaser.GameObjects.Sprite {
         this.sixthThresh = false;
 
         this.inFront = null;
-
-        this.direction = 1.0;
 
     }
 

@@ -39,10 +39,35 @@ class SpikesRight extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.soundPlayed = false;
+        this.sfx = scene.sound.add('sfx_sticks');
+
+        this.direction = 1.0;
+
     }
 
     update() {      // update method
 
+    }
+
+    playSound() {
+
+        if (!this.soundPlayed) {
+
+            this.sfx.play();
+            this.soundPlayed = true;
+        
+        }
+    }
+
+    playSound() {
+
+        if (!this.soundPlayed) {
+
+            this.sfx.play();
+            this.soundPlayed = true;
+        
+        }
     }
 
     reset() {
@@ -68,7 +93,7 @@ class SpikesRight extends Phaser.GameObjects.Sprite {
 
         this.inFront = null;
 
-        this.direction = 1.0;
+        this.soundPlayed = false;
 
     }
 

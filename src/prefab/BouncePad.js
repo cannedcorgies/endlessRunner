@@ -38,6 +38,9 @@ class BouncePad extends Phaser.GameObjects.Sprite {
 
         this.inFront;
 
+        this.soundPlayed = false;
+        this.sfx = scene.sound.add('sfx_rideCymbal');
+
         this.direction = 1.0;
 
         this.anims.create({         // simple animation that oscillates between frames 0 and 1, repeating
@@ -53,6 +56,16 @@ class BouncePad extends Phaser.GameObjects.Sprite {
 
     update() {      // update method
 
+    }
+
+    playSound() {
+
+        if (!this.soundPlayed) {
+
+            this.sfx.play();
+            this.soundPlayed = true;
+        
+        }
     }
 
     reset() {
@@ -80,6 +93,8 @@ class BouncePad extends Phaser.GameObjects.Sprite {
 
         this.collided = false;
         this.alpha = 1;
+
+        this.soundPlayed = false;
 
     }
 
