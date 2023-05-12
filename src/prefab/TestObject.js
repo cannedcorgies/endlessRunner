@@ -12,7 +12,7 @@ class TestObject extends Phaser.GameObjects.Sprite {
 
         super(scene, x, y, texture, frame);
 
-        console.log("from testObject.js: from constructor: i'm here!!")
+        console.log("from TestObject.js: from constructor: i'm here!!")
 
         scene.add.existing(this); 
 

@@ -14,10 +14,11 @@ class Car extends Phaser.GameObjects.Sprite {
 
         super(scene, x, y, texture, frame);
 
-        //this.sfxRocket = scene.sound.add('sfx_rocket');
-
         // add object to existing scene
         scene.add.existing(this);       // add to existing
+
+        console.log("from Car.js: from constructor: i'm here!!")
+
         this.moveSpeed = 30;             // pixels to move per frame
         this.airSpeed = 45;
 

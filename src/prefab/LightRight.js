@@ -12,7 +12,7 @@ class LightRight extends Phaser.GameObjects.Sprite {
 
         super(scene, x, y, texture, frame);
 
-        console.log("from LightLeft.js: from constructor: i'm here!!")
+        console.log("from LightRight.js: from constructor: i'm here!!")
 
         scene.add.existing(this); 
 

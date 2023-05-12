@@ -12,7 +12,7 @@ class SpikesRight extends Phaser.GameObjects.Sprite {
 
         super(scene, x, y, texture, frame);
 
-        console.log("from Road.js: from constructor: i'm here!!")
+        console.log("from SpikesRight.js: from constructor: i'm here!!")
 
         scene.add.existing(this); 
 

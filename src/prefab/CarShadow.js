@@ -7,6 +7,8 @@ class CarShadow extends Phaser.GameObjects.Sprite {
         // add object to existing scene
         scene.add.existing(this);       // add to existing
 
+        console.log("from CarShadow.js: from constructor: i'm here!!")
+
     }
 
     update() {}
