@@ -253,29 +253,20 @@ class Car extends Phaser.GameObjects.Sprite {
             if (collidee.direction > 0 && this.grounded) {
 
                 // simple AABB checking
-                if (((this.x < collidee.x + collidee.currWidth &&             // check if rocket origin is to left of collidee's RIGHT bound
-                        this.x + this.width > collidee.x) ||                      // check if collidee origin is to left of ROCKET'S RIGHT bound
-                        (this.x > collidee.x - collidee.currWidth &&              // check if rocket origin is to right of collidee'S RIGHT bound     // either or it's trapped in box
-                        collidee.y > this.x - this.width))                      // check if collidee origin is to right of ROCKET'S RIGHT bound
+                if (((this.x < collidee.x + collidee.currWidth &&                   // check if rocket origin is to left of collidee's RIGHT bound
+                        this.x + this.width > collidee.x) ||                        // check if collidee origin is to left of ROCKET'S RIGHT bound
+                        (this.x > collidee.x - collidee.currWidth &&                // check if rocket origin is to right of collidee'S RIGHT bound     // either or it's trapped in box
+                        collidee.y > this.x - this.width))                          // check if collidee origin is to right of ROCKET'S RIGHT bound
                         &&
-                        (this.y < collidee.y + collidee.currHeight &&             // check if rocket origin is above collidee's LOWER bound
-                        this.height + this.y > collidee. y)) {                    // check if collidee origin is above ROCKET'S LOWER bound
+                        (this.y < collidee.y + collidee.currHeight &&               // check if rocket origin is above collidee's LOWER bound
+                        this.height + this.y > collidee. y)) {                      // check if collidee origin is above ROCKET'S LOWER bound
                     
-                        return true && this.grounded && collidee.fifthThresh;        // returns true both if objects touching and collisions activated
+                        return true && this.grounded && collidee.fifthThresh;       // returns true both if objects touching and collisions activated
         
                     }
 
-            } else if (collidee.direction < 0 && !this.grounded &&
-            ((this.x < collidee.x + collidee.currWidth &&             // check if rocket origin is to left of collidee's RIGHT bound
-            this.x + this.width > collidee.x) ||                      // check if collidee origin is to left of ROCKET'S RIGHT bound
-            (this.x > collidee.x - collidee.currWidth &&              // check if rocket origin is to right of collidee'S RIGHT bound     // either or it's trapped in box
-            collidee.y > this.x - this.width))                      // check if collidee origin is to right of ROCKET'S RIGHT bound
-            &&
-            (this.y < collidee.y + collidee.currHeight &&             // check if rocket origin is above collidee's LOWER bound
-            this.height + this.y > collidee. y)                     // check if collidee origin is above ROCKET'S LOWER bound
-            //&& collidee.thirdThresh
-            && this.y <= game.config.height/2.7) {
-            return true;        // returns true both if objects touching and collisions activated{
+            } else if (this.y <= game.config.height/2.8 && collidee.fifthThresh && collidee.direction < 0) {
+                return true;        // returns true both if player is in blastzone
             } else { return false; }
         }
     
