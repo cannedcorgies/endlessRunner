@@ -43,6 +43,7 @@ class SpikesLeft extends Phaser.GameObjects.Sprite {
         this.sfx = scene.sound.add('sfx_sticks');
         
         this.direction = 1.0;
+        this.xDirection = 0.0;
 
     }
 

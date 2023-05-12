@@ -2,7 +2,7 @@
 
 //// NOTES ///////////
 
-
+// if you adjust height, adjust car colliion!!
 
 //////////////////////
 
@@ -16,7 +16,7 @@ class OverheadSign extends Phaser.GameObjects.Sprite {
 
         scene.add.existing(this); 
 
-        this.originPointY = game.config.height/2;
+        this.originPointY = game.config.height/2 - 5;
         this.originPointX = game.config.width/2;
         this.currWidth = this.width;
         this.currHeight = this.height;
@@ -41,7 +41,8 @@ class OverheadSign extends Phaser.GameObjects.Sprite {
         this.soundPlayed = false;
         this.sfx = scene.sound.add('sfx_rideBell');
 
-        this.direction = -.6;
+        this.direction = -.5;
+        this.xDirection = 0.0;
 
     }
 

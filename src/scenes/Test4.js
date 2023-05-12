@@ -32,6 +32,8 @@ class Test4 extends Phaser.Scene {
         this.load.image('overheadSign', './assets/watchYourHead.png');
 
         // extra
+        this.load.image('lightLeft', './assets/lightLeft.png');
+        this.load.image('lightRight', './assets/lightRight.png');
         this.load.image('yellowRoad', './assets/yellowRoad.png');
         this.load.image('greenRoad', './assets/greenRoad.png');
         this.load.image('indigoRoad', './assets/indigoRoad.png');
@@ -87,6 +89,11 @@ class Test4 extends Phaser.Scene {
             this.dummyRoad = new Road(this, 1000, 1000, 'redRoad');
             this.dummyRoad.firstThresh = true;
 
+            this.lightLeft01 = new LightLeft(this, 1000, 1000, 'lightLeft');
+            this.lightLeft02 = new LightLeft(this, 1000, 1000, 'lightLeft');
+            this.lightRight01 = new LightRight(this, 1000, 1000, 'lightRight');
+            this.lightRight02 = new LightRight(this, 1000, 1000, 'lightRight');
+
             this.blackRoad01 = new Road(this, 1000, 1000, 'blackRoad');
             this.blackRoad02 = new Road(this, 1000, 1000, 'blackRoad');
 
@@ -123,6 +130,12 @@ class Test4 extends Phaser.Scene {
                 this.blackRoad02,
                 this.redBlock01];
 
+            this.lightsLeftBank = [];
+            this.lightsLeftQueue = [ this.lightLeft01, this.lightLeft02 ];
+
+            this.lightsRightBank = [];
+            this.lightsRightQueue = [ this.lightRight01, this.lightRight02 ];
+
 
         // player
 
@@ -143,6 +156,8 @@ class Test4 extends Phaser.Scene {
         // my camera
 
             this.camera = this.cameras.main;
+            this.cameraDefX = this.camera.x;
+            this.shake = 0.0017;
         
         // scoring
 
@@ -186,11 +201,21 @@ class Test4 extends Phaser.Scene {
             this.queue[0].inFront = this.dummyRoad;
             this.queue[1].inFront = this.queue[0];
 
+            this.lightsLeftQueue[0].inFront = this.dummyRoad;
+            this.lightsLeftQueue[1].inFront = this.lightsLeftQueue[0];
+
+            this.lightsRightQueue[0].inFront = this.dummyRoad;
+            this.lightsRightQueue[1].inFront = this.lightsRightQueue[0];
+
         // tutorials
         
             this.gameOverSoundPlayed = false;
 
-            this.jumpText = this.add.text(game.config.width/2, game.config.height/2, 'F');
+            this.jumpText = this.add.text(game.config.width/2 - 5, game.config.height/2 - 40, 'F');
+            this.leftText = this.add.text(game.config.width/2 - 20, game.config.height/2 - 30, '←');
+            this.rightText = this.add.text(game.config.width/2 + 10, game.config.height/2 - 30, '→');
+            this.downText = this.add.text(game.config.width/2 - 5, game.config.height/2 - 35, '↓');
+            this.downText.alpha = 0;
 
             this.watchYourHeadText = this.add.text(game.config.width/2, game.config.height/2, 'watch your head');
             this.watchYourHeadTip = this.add.text(game.config.width/2 + 20, game.config.height/2 + 20, 'press ↓ midair to dash down');
@@ -237,16 +262,85 @@ class Test4 extends Phaser.Scene {
 
             this.sfx_whaleSinging = this.sound.add('sfx_whaleSinging');
 
+                // credits
+            this.assetsCreditsLeft01 = this.add.text(5, 100, "sprites by");
+            this.assetsCreditsLeft02 = this.add.text(0, 120, "fern (me)");
+
+            this.assetsCreditsLeft01.alpha = 0;
+            this.assetsCreditsLeft02.alpha = 0;
+
+            this.assetsCreditsRight01 = this.add.text(rightRail - 40, 100, "sfx made in");
+            this.assetsCreditsRight02 = this.add.text(rightRail - 35, 120, "onlinesequencer.net");
+
+            this.assetsCreditsRight01.alpha = 0;
+            this.assetsCreditsRight02.alpha = 0;
+
+            this.assetsCreditsRight03 = this.add.text(rightRail - 30, 150, "Dark Ambient Music");
+            this.assetsCreditsRight04 = this.add.text(rightRail - 25, 170, "- BreakingCopyright (YouTube)");
+
+            this.assetsCreditsRight03.alpha = 0;
+            this.assetsCreditsRight04.alpha = 0;
+
+            this.assetsCreditsRight05 = this.add.text(rightRail - 30, 200, "Whale Singing Sound Effect");
+            this.assetsCreditsRight06 = this.add.text(rightRail - 35, 220, "- NEZAR Free Sound FX (YouTube)");
+
+            this.assetsCreditsRight05.alpha = 0;
+            this.assetsCreditsRight06.alpha = 0;
+
     }
   
     update() {
 
+        if (this.player.tutorialJumped) { this.jumpText.alpha = 0; }
+        if (this.player.tutorialRighted) { this.rightText.alpha = 0; }
+        if (this.player.tutorialLefted) { this.leftText.alpha = 0; }
+        if (!this.player.grounded && !this.player.tutorialDropped) { this.downText.alpha = 1; }
+        else { this.downText.alpha = 0; }
+
+        if (!this.player.gameOver) {
+        
+            this.tweensChecks(this.lightsLeftQueue[0], this.lightsLeftQueue, this.lightsLeftBank);
+            this.tweensChecks(this.lightsLeftQueue[1], this.lightsLeftQueue, this.lightsLeftBank);
+
+            this.tweensChecks(this.lightsRightQueue[0], this.lightsRightQueue, this.lightsRightBank);
+            this.tweensChecks(this.lightsRightQueue[1], this.lightsRightQueue, this.lightsRightBank);
+
+        }
+
         if (this.player.grounded) {     // shake camera when player on ground
 
-            this.camera.shake(100, 0.0015);
+            this.camera.shake(100, this.shake);
         }
 
         if (!this.player.gameStart) {   // if game hasn't started
+
+            if (keyLEFT.isDown && this.player.x >= leftRail + this.player.width) {
+
+                console.log("moving left");
+                this.assetsCreditsLeft01.alpha = 0;
+                this.assetsCreditsLeft02.alpha = 0;
+                this.assetsCreditsRight01.alpha = 1;
+                this.assetsCreditsRight02.alpha = 1;
+                this.assetsCreditsRight03.alpha = 1;
+                this.assetsCreditsRight04.alpha = 1;
+                this.assetsCreditsRight05.alpha = 1;
+                this.assetsCreditsRight06.alpha = 1;
+                this.camera.x -= 30;
+    
+            } else if (keyRIGHT.isDown && this.player.x <= rightRail - this.player.width) {
+    
+                console.log("moving right");
+                this.assetsCreditsLeft01.alpha = 1;
+                this.assetsCreditsLeft02.alpha = 1;
+                this.assetsCreditsRight01.alpha = 0;
+                this.assetsCreditsRight02.alpha = 0;
+                this.assetsCreditsRight03.alpha = 0;
+                this.assetsCreditsRight04.alpha = 0;
+                this.assetsCreditsRight05.alpha = 0;
+                this.assetsCreditsRight06.alpha = 0;
+                this.camera.x += 30;
+    
+            }
 
             if (Phaser.Input.Keyboard.JustDown(keyF)) {     // start when f pressed (on first jump)
                 
@@ -261,6 +355,17 @@ class Test4 extends Phaser.Scene {
 
         } else if (!this.player.gameOver && this.player.gameStart) {    // run regular game
 
+            this.assetsCreditsLeft01.alpha = 0;
+            this.assetsCreditsLeft02.alpha = 0;
+            this.assetsCreditsRight01.alpha = 0;
+            this.assetsCreditsRight02.alpha = 0;
+            this.assetsCreditsRight03.alpha = 0;
+            this.assetsCreditsRight04.alpha = 0;
+            this.assetsCreditsRight05.alpha = 0;
+            this.assetsCreditsRight06.alpha = 0;
+
+            this.camera.x = this.cameraDefX;
+
             this.blackScreen.alpha = 0;     // make sure fade in is off
 
             this.scoreDisplay.text = this.player.score;     // update score
@@ -274,8 +379,8 @@ class Test4 extends Phaser.Scene {
             }
 
             // tween two objects at any given time
-            this.tweensChecks(this.queue[0]);
-            this.tweensChecks(this.queue[1]);
+            this.tweensChecks(this.queue[0], this.queue, this.bank);
+            this.tweensChecks(this.queue[1], this.queue, this.bank);
 
             // player, shadow, and collision update
             this.player.update();
@@ -284,6 +389,12 @@ class Test4 extends Phaser.Scene {
 
         } else {        // if game over
 
+            this.jumpText.alpha = 0;
+            this.leftText.alpha = 0;
+            this.rightText.alpha = 0;
+            this.downText.alpha = 0;
+
+            this.shake = 0.0015
             // high score save
             if (localStorage.getItem("localHigh") < this.player.score) {
 
@@ -302,6 +413,7 @@ class Test4 extends Phaser.Scene {
             }
 
             this.player.alpha = 0;          // player is removed from screen
+            this.carShadow.alpha = 0;
             this.restartText.alpha = 1;     // plus restart prompt
 
             // conditional tutorial
@@ -355,6 +467,7 @@ class Test4 extends Phaser.Scene {
         
         if (this.acceleration > 0.2 && this.player.gameStart) {
             this.acceleration -= 0.1;
+            this.shake += 0.0001
         }
 
         console.log("from Test4.js: from speedUp(): speeding up!", console.log(this.acceleration));
@@ -380,7 +493,7 @@ class Test4 extends Phaser.Scene {
     }
 
     // update to correct tween for each index in queue
-    tweensChecks(segment) {
+    tweensChecks(segment, queue, bank) {
 
         if (!segment.firstThresh && !segment.firstGo && segment.inFront.firstThresh) {
             segment.x = segment.originPointX;
@@ -400,7 +513,7 @@ class Test4 extends Phaser.Scene {
             this.tweenCont5(segment);
         }
         if (!segment.sixthThresh && !segment.sixthGo && segment.fifthThresh) {          // queue passed for popping and pushing
-            this.tweenCont6(segment, this.queue, this.bank);
+            this.tweenCont6(segment, queue, bank);
         }
 
     }
@@ -413,6 +526,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -423,6 +537,9 @@ class Test4 extends Phaser.Scene {
                 segment.firstThresh = true;
                 segment.currWidth *= 2.33;
                 segment.currHeight *= 2.33;
+
+                // console.log("Test4.js: tweenMe():", segment.xDirection);
+
             }
             
 
@@ -437,6 +554,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -461,6 +579,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -483,6 +602,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -507,6 +627,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -531,6 +652,7 @@ class Test4 extends Phaser.Scene {
         var tween = this.tweens.add({
 
             targets: segment,
+            x: segment.x + (segment.width * (segment.scaleX * 2.33)) * segment.xDirection,
             y: segment.y + (segment.height * (segment.scaleX * 2.33)) * segment.direction,
             scaleX: segment.scaleX * 2.33,
             scaleY: segment.scaleY * 2.33,
@@ -556,8 +678,8 @@ class Test4 extends Phaser.Scene {
 
                 queue[1].inFront = queue[0];     // repeat
 
-                console.log("from Test4.js: from tweenCont6(): running queue:", queue);
-                console.log("from Test4.js: from tweenCont6(): running bank:", bank);
+                // console.log("from Test4.js: from tweenCont6(): running queue:", queue);
+                // console.log("from Test4.js: from tweenCont6(): running bank:", bank);
 
             }
             

@@ -6,17 +6,17 @@
 
 //////////////////////
 
-class Road extends Phaser.GameObjects.Sprite {
+class LightRight extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, texture, frame) {
 
         super(scene, x, y, texture, frame);
 
-        console.log("from Road.js: from constructor: i'm here!!")
+        console.log("from LightLeft.js: from constructor: i'm here!!")
 
         scene.add.existing(this); 
 
-        this.originPointY = game.config.height/2;
+        this.originPointY = game.config.height/2 - 5;
         this.originPointX = game.config.width/2;
         this.scaleX = 0.1;
         this.scaleY = 0.1;
@@ -37,7 +37,8 @@ class Road extends Phaser.GameObjects.Sprite {
         this.inFront;
 
         this.direction = 1.0;
-        this.xDirection = 0.0;
+
+        this.xDirection = 1.0;
 
     }
 

@@ -42,6 +42,7 @@ class BouncePad extends Phaser.GameObjects.Sprite {
         this.sfx = scene.sound.add('sfx_rideCymbal');
 
         this.direction = 1.0;
+        this.xDirection = 0.0;
 
         this.anims.create({         // simple animation that oscillates between frames 0 and 1, repeating
             key: "blinking",

@@ -42,6 +42,7 @@ class Bonus extends Phaser.GameObjects.Sprite {
         this.sfx = scene.sound.add('sfx_openTriangle');
 
         this.direction = 1.0;
+        this.xDirection = 0.0;
 
         this.bonus = 5;
         this.collided = false;

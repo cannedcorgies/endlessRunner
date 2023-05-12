@@ -42,6 +42,7 @@ class Spikes extends Phaser.GameObjects.Sprite {
         this.sfx = scene.sound.add('sfx_midTom1');
 
         this.direction = 1.0;
+        this.xDirection = 0.0;
 
     }
 

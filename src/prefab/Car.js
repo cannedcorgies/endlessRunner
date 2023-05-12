@@ -72,6 +72,12 @@ class Car extends Phaser.GameObjects.Sprite {
         this.sideFail = false;
         this.groundFail = false;
 
+            // tutorials
+        this.tutorialJumped = false;
+        this.tutorialLefted = false;
+        this.tutorialRighted = false;
+        this.tutorialDropped = false;
+
     }
 
     update() {
@@ -82,6 +88,8 @@ class Car extends Phaser.GameObjects.Sprite {
         // left/right movement
         if (keyLEFT.isDown&& this.x >= leftRail + this.width) {
 
+            this.tutorialLefted = true;
+
             if (this.jumping){
                 this.x -= this.airSpeed;    // floaty movement in the air
             } else {
@@ -89,6 +97,8 @@ class Car extends Phaser.GameObjects.Sprite {
             }
 
         } else if (keyRIGHT.isDown && this.x <= rightRail - this.width) {
+
+            this.tutorialRighted = true;
 
             if (this.jumping){
                 this.x += this.airSpeed;    // floaty movement in the air
@@ -101,6 +111,8 @@ class Car extends Phaser.GameObjects.Sprite {
 
         // jump button
         if (Phaser.Input.Keyboard.JustDown(keyF) && this.grounded) { // keyF.isDown for constant, Phaser.Input.Keyboard.JustDown(keyF) for once
+
+            this.tutorialJumped = true;
             
             this.jumpStart();
             //this.sfxRocket.play();
@@ -108,6 +120,8 @@ class Car extends Phaser.GameObjects.Sprite {
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyDOWN) && !this.grounded) { // keyDOWN.isDown for constant, Phaser.Input.Keyboard.JustDown(keyDOWN) for once
+
+            this.tutorialDropped = true;
             
             this.dropping = true;
             this.jumping = false;
@@ -250,15 +264,17 @@ class Car extends Phaser.GameObjects.Sprite {
         
                     }
 
-            } else if (((this.x < collidee.x + collidee.currWidth &&             // check if rocket origin is to left of collidee's RIGHT bound
+            } else if (collidee.direction < 0 && !this.grounded &&
+            ((this.x < collidee.x + collidee.currWidth &&             // check if rocket origin is to left of collidee's RIGHT bound
             this.x + this.width > collidee.x) ||                      // check if collidee origin is to left of ROCKET'S RIGHT bound
             (this.x > collidee.x - collidee.currWidth &&              // check if rocket origin is to right of collidee'S RIGHT bound     // either or it's trapped in box
             collidee.y > this.x - this.width))                      // check if collidee origin is to right of ROCKET'S RIGHT bound
             &&
             (this.y < collidee.y + collidee.currHeight &&             // check if rocket origin is above collidee's LOWER bound
-            this.height + this.y > collidee. y)) {                    // check if collidee origin is above ROCKET'S LOWER bound
-        
-            return true && (this.y < game.config.height/3.5) && collidee.fifthThresh;        // returns true both if objects touching and collisions activated{
+            this.height + this.y > collidee. y)                     // check if collidee origin is above ROCKET'S LOWER bound
+            //&& collidee.thirdThresh
+            && this.y <= game.config.height/2.7) {
+            return true;        // returns true both if objects touching and collisions activated{
             } else { return false; }
         }
     
